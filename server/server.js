@@ -17,20 +17,39 @@ app.use(express.urlencoded({ extended: true }));
 // API Routes
 app.use('/api', apiRoutes);
 
-// Root Status
-app.get('/', (req, res) => {
-  res.json({
-    name: 'Master Admin API (Velzano, Echo, VDigimarks)',
-    status: 'Running',
-    version: '1.0.0',
-    endpoints: {
-      health: '/api/health',
-      stats: '/api/stats',
-      search: '/api/search?q=keyword',
-      collections: '/api/:project/collections'
-    }
+// Serve Client Static Build if available
+const fs = require('fs');
+const clientDist = path.join(__dirname, '../client/dist');
+const altClientDist = path.join(__dirname, './dist');
+
+if (fs.existsSync(clientDist)) {
+  app.use(express.static(clientDist));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(clientDist, 'index.html'));
   });
-});
+} else if (fs.existsSync(altClientDist)) {
+  app.use(express.static(altClientDist));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(altClientDist, 'index.html'));
+  });
+} else {
+  // Root Status Endpoint
+  app.get('/', (req, res) => {
+    res.json({
+      name: 'Master Admin API (Velzano, Echo, VDigimarks)',
+      status: 'Running',
+      version: '1.0.0',
+      endpoints: {
+        health: '/api/health',
+        stats: '/api/stats',
+        search: '/api/search?q=keyword',
+        collections: '/api/:project/collections'
+      }
+    });
+  });
+}
 
 // Start server after initializing DB connections
 async function startServer() {
