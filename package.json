@@ -1,0 +1,10 @@
+{
+  "name": "all-admin-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install": "cd server && npm install && cd ../client1 && npm install",
+    "build": "cd client1 && npm install && npm run build && cd ../server && npm install",
+    "start": "cd server && node server.js"
+  }
+}

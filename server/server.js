@@ -19,20 +19,24 @@ app.use('/api', apiRoutes);
 
 // Serve Client Static Build if available
 const fs = require('fs');
+const client1Dist = path.join(__dirname, '../client1/dist');
 const clientDist = path.join(__dirname, '../client/dist');
 const altClientDist = path.join(__dirname, './dist');
 
-if (fs.existsSync(clientDist)) {
-  app.use(express.static(clientDist));
-  app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/api')) return next();
-    res.sendFile(path.join(clientDist, 'index.html'));
-  });
+let staticPath = null;
+if (fs.existsSync(client1Dist)) {
+  staticPath = client1Dist;
+} else if (fs.existsSync(clientDist)) {
+  staticPath = clientDist;
 } else if (fs.existsSync(altClientDist)) {
-  app.use(express.static(altClientDist));
+  staticPath = altClientDist;
+}
+
+if (staticPath) {
+  app.use(express.static(staticPath));
   app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api')) return next();
-    res.sendFile(path.join(altClientDist, 'index.html'));
+    res.sendFile(path.join(staticPath, 'index.html'));
   });
 } else {
   // Root Status Endpoint
