@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "cd ../client1 && npm install && npm run build"
+    "build": "cd ../client1 && npm install && npm run build && cd .. && node -e \"require('fs').cpSync('client1/dist', 'dist', {recursive: true}); require('fs').cpSync('client1/dist', '.dist', {recursive: true}); require('fs').cpSync('client1/dist', 'server/dist', {recursive: true})\""
   },
   "dependencies": {
     "cors": "^2.8.5",

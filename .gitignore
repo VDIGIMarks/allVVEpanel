@@ -4,8 +4,10 @@ node_modules/
 
 # Production / Builds
 dist/
+.dist/
 build/
 **/dist/
+**/.dist/
 
 # Environment variables
 .env

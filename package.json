@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "install": "cd server && npm install && cd ../client1 && npm install",
-    "build": "cd client1 && npm install && npm run build && cd ../server && npm install",
+    "build": "cd client1 && npm install && npm run build && cd .. && node -e \"require('fs').cpSync('client1/dist', 'dist', {recursive: true}); require('fs').cpSync('client1/dist', '.dist', {recursive: true})\" && cd server && npm install",
     "start": "cd server && node server.js"
   }
 }
