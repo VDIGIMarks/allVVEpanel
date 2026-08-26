@@ -8,7 +8,7 @@ export default defineConfig({
     port: 5174,
     proxy: {
       '/api': {
-        target: 'http://localhost:5002',
+        target: process.env.VITE_API_BASE_URL || 'https://allvvepanel.onrender.com',
         changeOrigin: true,
         secure: false,
       },
