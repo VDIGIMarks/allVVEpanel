@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Database, Save, RefreshCw, CheckCircle, AlertCircle, ShieldAlert, Sparkles, Server } from 'lucide-react';
+import { getApiUrl } from '../config/api';
 
 export default function Settings({ health, onRefreshHealth, onShowToast }) {
   const [uris, setUris] = useState({
@@ -13,7 +14,7 @@ export default function Settings({ health, onRefreshHealth, onShowToast }) {
   useEffect(() => {
     async function fetchUris() {
       try {
-        const res = await fetch('/api/config/connection');
+        const res = await fetch(getApiUrl('/api/config/connection'));
         const data = await res.json();
         if (data.success && data.uris) {
           setUris(prev => ({ ...prev, ...data.uris }));
@@ -28,7 +29,7 @@ export default function Settings({ health, onRefreshHealth, onShowToast }) {
   const handleUpdateUri = async (project) => {
     setLoading(prev => ({ ...prev, [project]: true }));
     try {
-      const res = await fetch('/api/config/connection', {
+      const res = await fetch(getApiUrl('/api/config/connection'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ project, uri: uris[project] })
@@ -51,7 +52,7 @@ export default function Settings({ health, onRefreshHealth, onShowToast }) {
 
   const handleResetSeed = async () => {
     try {
-      const res = await fetch('/api/config/reset-seed', { method: 'POST' });
+      const res = await fetch(getApiUrl('/api/config/reset-seed'), { method: 'POST' });
       const data = await res.json();
       if (data.success) {
         onRefreshHealth();

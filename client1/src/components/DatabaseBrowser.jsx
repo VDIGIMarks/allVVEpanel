@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, Download, RefreshCw, Eye, Edit3, Trash2, ChevronLeft, ChevronRight, FileSpreadsheet, Layers, Filter, ShieldCheck } from 'lucide-react';
 import { getVelzanoFormLabel } from './Sidebar';
+import { getApiUrl } from '../config/api';
 
 export default function DatabaseBrowser({ project, collection, onSelectCollection, onOpenCreate, onOpenView, onOpenEdit, onDeleteDocument }) {
   const [documents, setDocuments] = useState([]);
@@ -17,7 +18,7 @@ export default function DatabaseBrowser({ project, collection, onSelectCollectio
   useEffect(() => {
     async function fetchCollections() {
       try {
-        const res = await fetch(`/api/${project}/collections`);
+        const res = await fetch(getApiUrl(`/api/${project}/collections`));
         const data = await res.json();
         if (data.success) {
           setCollections(data.collections);
@@ -39,7 +40,7 @@ export default function DatabaseBrowser({ project, collection, onSelectCollectio
     setLoading(true);
     setFetchError(null);
     try {
-      const res = await fetch(`/api/${project}/collections/${collection}/documents?page=${page}&limit=15&search=${encodeURIComponent(search)}`);
+      const res = await fetch(getApiUrl(`/api/${project}/collections/${collection}/documents?page=${page}&limit=15&search=${encodeURIComponent(search)}`));
       const data = await res.json();
       if (data.success) {
         setDocuments(data.documents || []);

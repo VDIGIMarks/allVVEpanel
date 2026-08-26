@@ -8,6 +8,8 @@ import UnifiedSearch from './components/UnifiedSearch';
 import Settings from './components/Settings';
 import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 
+import { getApiUrl } from './config/api';
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('Overview');
   const [selectedCollection, setSelectedCollection] = useState('users');
@@ -34,7 +36,7 @@ export default function App() {
   // Fetch overall health and database stats
   const fetchHealthAndStats = async () => {
     try {
-      const res = await fetch('/api/health');
+      const res = await fetch(getApiUrl('/api/health'));
       const data = await res.json();
       if (data.success) {
         setStats(data.stats);
@@ -94,10 +96,10 @@ export default function App() {
 
   const handleSaveDocument = async (mode, project, collection, payload, id) => {
     try {
-      let url = `/api/${project}/collections/${collection}/documents`;
+      let url = getApiUrl(`/api/${project}/collections/${collection}/documents`);
       let method = 'POST';
       if (mode === 'edit') {
-        url = `/api/${project}/collections/${collection}/documents/${id}`;
+        url = getApiUrl(`/api/${project}/collections/${collection}/documents/${id}`);
         method = 'PUT';
       }
 
@@ -121,7 +123,7 @@ export default function App() {
   const handleDeleteDocument = async (project, collection, id, reloadFn) => {
     if (!window.confirm(`Are you sure you want to delete record ${id}?`)) return;
     try {
-      const res = await fetch(`/api/${project}/collections/${collection}/documents/${id}`, {
+      const res = await fetch(getApiUrl(`/api/${project}/collections/${collection}/documents/${id}`), {
         method: 'DELETE'
       });
       const data = await res.json();

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Database, Layers, ArrowRight, FileText, Sparkles, Filter } from 'lucide-react';
+import { getApiUrl } from '../config/api';
 
 export default function UnifiedSearch({ onNavigateToDoc }) {
   const [query, setQuery] = useState('');
@@ -12,7 +13,7 @@ export default function UnifiedSearch({ onNavigateToDoc }) {
     if (!query.trim()) return;
     setLoading(true);
     try {
-      const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+      const res = await fetch(getApiUrl(`/api/search?q=${encodeURIComponent(query)}`));
       const data = await res.json();
       if (data.success) {
         setResults(data.results || []);
